@@ -74,38 +74,24 @@
             100% { transform: translateY(-120vh) rotate(15deg); opacity: 0; }
         }
 
-        /* --- Scene 3: Kue & Lilin 4th --- */
+        /* --- Scene 3: Kue 4 Tingkat & Lilin 4th --- */
         .cake-container { 
             position: relative; 
             cursor: pointer; 
             text-align: center; 
-            margin-top: 50px;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .cake {
-            width: 220px; 
-            height: 100px;
-            background-color: #f3a683;
-            border-radius: 15px;
-            position: relative;
-            box-shadow: inset 0 -15px rgba(0,0,0,0.1), 0 10px 20px rgba(0,0,0,0.2);
-        }
-        .cake::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 30px;
-            background-color: #ffcccc;
-            border-radius: 15px 15px 20px 20px;
-        }
+        
         .candle-wrapper {
-            position: absolute;
-            top: -110px;
-            left: 50%;
-            transform: translateX(-50%);
+            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
             z-index: 10;
+            margin-bottom: -10px; /* Agar lilin menempel di atas kue */
         }
         .candle-text {
             font-size: 80px; 
@@ -133,16 +119,43 @@
         .wind {
             position: absolute; width: 80px; height: 3px;
             background: rgba(150, 200, 255, 0.8);
-            top: -80px; right: -150px; opacity: 0;
+            top: 15px; /* Sejajar dengan api lilin */
+            right: -150px; opacity: 0;
             border-radius: 5px;
             z-index: 20;
         }
         .blow-anim { animation: blowWind 1s forwards; }
         @keyframes blowWind {
             0% { right: -150px; opacity: 0; }
-            50% { opacity: 1; right: 20px;}
-            100% { right: 150px; opacity: 0; }
+            50% { opacity: 1; right: -20px;}
+            100% { right: 100px; opacity: 0; }
         }
+
+        /* Struktur Kue Piramida */
+        .cake-pyramid {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .cake-tier {
+            background-color: #f3a683;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: inset 0 -10px rgba(0,0,0,0.1), 0 5px 10px rgba(0,0,0,0.15);
+        }
+        .cake-tier::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 15px;
+            background-color: #ffcccc; /* Lelehan krim */
+            border-radius: 10px 10px 15px 15px;
+        }
+        .tier-4 { width: 100px; height: 40px; z-index: 4; }
+        .tier-3 { width: 160px; height: 40px; z-index: 3; margin-top: -5px; }
+        .tier-2 { width: 220px; height: 40px; z-index: 2; margin-top: -5px; }
+        .tier-1 { width: 280px; height: 40px; z-index: 1; margin-top: -5px; }
+
 
         /* --- Scene 4: Kado & Animasi Buka Kado --- */
         .gift-scene-text {
@@ -162,7 +175,6 @@
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-15px); }
         }
-        /* Tutup Kado */
         .gift-lid {
             position: absolute;
             width: 150px;
@@ -183,7 +195,6 @@
             height: 100%;
             background-color: #f1c40f;
         }
-        /* Badan Kado */
         .gift-box-body {
             position: absolute;
             width: 140px;
@@ -202,20 +213,18 @@
             height: 100%;
             background-color: #f1c40f;
         }
-        /* Isi Kado (Flashdisk) */
         .hidden-flashdisk {
             position: absolute;
             font-size: 60px;
             left: 40px;
-            bottom: 20px; /* Sembunyi di dalam box */
+            bottom: 20px; 
             z-index: 1;
             transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             opacity: 0;
         }
 
-        /* Kelas saat kado diklik */
         .gift-container.opened {
-            animation: none; /* hentikan bounce */
+            animation: none; 
             cursor: default;
         }
         .gift-container.opened .gift-lid {
@@ -223,7 +232,7 @@
             opacity: 0;
         }
         .gift-container.opened .hidden-flashdisk {
-            bottom: 140px; /* Muncul ke atas */
+            bottom: 140px; 
             opacity: 1;
             transform: scale(1.3);
         }
@@ -249,7 +258,6 @@
             position: relative;
             overflow: hidden;
         }
-        /* Lampu indikator webcam */
         .laptop-screen::before {
             content: '';
             position: absolute;
@@ -269,7 +277,6 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.3);
             position: relative;
         }
-        /* Cekungan trackpad */
         .laptop-keyboard::after {
             content: '';
             position: absolute;
@@ -317,7 +324,6 @@
             line-height: 1.6;
             color: #2f3542;
         }
-        /* Kotak placeholder foto */
         .photo-placeholder {
             width: 80%;
             height: 200px;
@@ -345,18 +351,25 @@
         <!-- Balon JS -->
     </div>
 
-    <!-- Scene 3: Kue Anniversary -->
+    <!-- Scene 3: Kue 4 Tingkat -->
     <div id="scene3" class="scene">
-        <h2 style="color: #2f3542; margin-bottom: 60px;">Klik kue untuk meniup lilin!</h2>
+        <h2 style="color: #2f3542; margin-bottom: 40px;">Klik kue untuk meniup lilin!</h2>
+        
         <div class="cake-container" id="cake-click">
-            <div class="wind" id="wind"></div>
-            <!-- Lilin bentuk 4th -->
+            <!-- Lilin bentuk 4th di pucuk -->
             <div class="candle-wrapper">
+                <div class="wind" id="wind"></div>
                 <div class="flame" id="flame"></div>
                 <div class="candle-text">4<span>th</span></div>
             </div>
-            <!-- Body Kue -->
-            <div class="cake"></div>
+            
+            <!-- 4 Tingkat Kue -->
+            <div class="cake-pyramid">
+                <div class="cake-tier tier-4"></div>
+                <div class="cake-tier tier-3"></div>
+                <div class="cake-tier tier-2"></div>
+                <div class="cake-tier tier-1"></div>
+            </div>
         </div>
     </div>
 
@@ -419,13 +432,12 @@
             const wind = document.getElementById('wind');
             const flame = document.getElementById('flame');
             
-            // Mencegah klik berkali-kali
             if(wind.classList.contains('blow-anim')) return;
 
             wind.classList.add('blow-anim'); 
             
             setTimeout(() => {
-                flame.style.animation = 'none'; // Hentikan flicker
+                flame.style.animation = 'none'; 
                 flame.style.opacity = '0';
             }, 500);
 
@@ -436,13 +448,10 @@
 
         // --- Logika Scene 4 (Animasi Buka Kado) ---
         document.getElementById('gift-container').addEventListener('click', function() {
-            // Jika sudah diklik, jangan jalankan lagi
             if(this.classList.contains('opened')) return; 
             
-            // Tambahkan class opened untuk memicu animasi CSS
             this.classList.add('opened');
             
-            // Tunggu 2.5 detik agar animasi kado terbuka & flashdisk keluar selesai, baru pindah scene
             setTimeout(() => {
                 switchScene('scene4', 'scene5');
                 
@@ -450,11 +459,9 @@
                 const screen = document.getElementById('screen');
                 const content = document.getElementById('screen-content');
 
-                // Beri sedikit delay agar scene 5 muncul dulu, baru flashdisk dicolok
                 setTimeout(() => {
                     flashdisk.classList.add('plug-in');
                     
-                    // Setelah flashdisk nancap (1.5s), nyalakan layar
                     setTimeout(() => {
                         screen.style.backgroundColor = '#fdf5e6';
                         content.style.display = 'block';
@@ -467,8 +474,3 @@
     </script>
 </body>
 </html>
-```eof
-
-Sekarang kamu bisa **mengulang langkah edit file** seperti yang tadi kita bahas (mengubah nama file yang ada di GitHub menjadi `index.html`, lalu mengganti seluruh isinya dengan kode baru di atas, dan klik *Commit changes*). 
-
-Semua *request* kamu (tombol Mulai, lilin 4th, animasi kado terbang, dan laptop besar) sudah siap berjalan dengan mulus!
