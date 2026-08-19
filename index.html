@@ -10,7 +10,7 @@
             padding: 0;
             background-color: #fdf5e6;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden; /* Mencegah scroll saat balon terbang */
+            overflow: hidden; /* Mencegah scroll */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -33,17 +33,21 @@
 
         /* --- Scene 1: Tombol Mulai --- */
         #btn-mulai {
-            padding: 15px 40px;
-            font-size: 24px;
+            padding: 15px 50px;
+            font-size: 28px;
+            font-weight: bold;
             background-color: #ff6b6b;
             color: white;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
-            transition: transform 0.2s;
+            transition: transform 0.2s, background-color 0.2s;
         }
-        #btn-mulai:hover { transform: scale(1.1); }
+        #btn-mulai:hover { 
+            transform: scale(1.1); 
+            background-color: #ff4757;
+        }
 
         /* --- Scene 2: Balon --- */
         .balloon {
@@ -63,123 +67,307 @@
             width: 0; height: 0;
             border-left: 5px solid transparent;
             border-right: 5px solid transparent;
-            border-bottom: 10px solid #ff6b6b;
+            border-bottom: 10px solid inherit;
         }
         @keyframes flyUp {
             0% { transform: translateY(0) rotate(0deg); opacity: 1; }
             100% { transform: translateY(-120vh) rotate(15deg); opacity: 0; }
         }
 
-        /* --- Scene 3: Kue --- */
-        .cake-container { position: relative; cursor: pointer; text-align: center; }
-        .cake {
-            width: 150px; height: 80px;
-            background-color: #f3a683;
-            border-radius: 10px;
-            position: relative;
+        /* --- Scene 3: Kue & Lilin 4th --- */
+        .cake-container { 
+            position: relative; 
+            cursor: pointer; 
+            text-align: center; 
             margin-top: 50px;
-            box-shadow: inset 0 -10px rgba(0,0,0,0.1);
         }
-        .cake-text {
-            font-size: 40px; font-weight: bold; color: white;
-            line-height: 80px; margin: 0;
+        .cake {
+            width: 220px; 
+            height: 100px;
+            background-color: #f3a683;
+            border-radius: 15px;
+            position: relative;
+            box-shadow: inset 0 -15px rgba(0,0,0,0.1), 0 10px 20px rgba(0,0,0,0.2);
         }
-        .candle {
-            width: 15px; height: 50px;
-            background: repeating-linear-gradient(45deg, #fff, #fff 5px, #ff4757 5px, #ff4757 10px);
-            position: absolute; top: -50px; left: 67px;
+        .cake::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 30px;
+            background-color: #ffcccc;
+            border-radius: 15px 15px 20px 20px;
+        }
+        .candle-wrapper {
+            position: absolute;
+            top: -110px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+        }
+        .candle-text {
+            font-size: 80px; 
+            font-family: 'Arial Black', sans-serif;
+            color: #ff9ff3;
+            text-shadow: 3px 3px 0px #d980fa, -1px -1px 0 #fff, 1px -1px 0 #fff;
+            line-height: 0.8;
+            margin-top: 10px;
+        }
+        .candle-text span {
+            font-size: 40px;
         }
         .flame {
-            width: 15px; height: 25px;
+            width: 20px; height: 35px;
             background-color: #f1c40f;
             border-radius: 50% 50% 20% 20%;
-            position: absolute; top: -30px; left: 0;
-            box-shadow: 0 0 15px #f1c40f;
+            box-shadow: 0 0 20px #f1c40f, 0 0 40px #f39c12;
             transition: opacity 0.3s;
+            animation: flicker 0.5s infinite alternate;
+        }
+        @keyframes flicker {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.1) rotate(-2deg); opacity: 0.8; }
         }
         .wind {
-            position: absolute; width: 50px; height: 2px;
-            background: rgba(200, 200, 255, 0.8);
-            top: 20px; right: -100px; opacity: 0;
+            position: absolute; width: 80px; height: 3px;
+            background: rgba(150, 200, 255, 0.8);
+            top: -80px; right: -150px; opacity: 0;
+            border-radius: 5px;
+            z-index: 20;
         }
         .blow-anim { animation: blowWind 1s forwards; }
         @keyframes blowWind {
-            0% { right: -100px; opacity: 0; }
-            50% { opacity: 1; }
-            100% { right: 100px; opacity: 0; }
+            0% { right: -150px; opacity: 0; }
+            50% { opacity: 1; right: 20px;}
+            100% { right: 150px; opacity: 0; }
         }
 
-        /* --- Scene 4: Kado --- */
-        .gift { font-size: 100px; cursor: pointer; animation: shake 2s infinite; }
-        @keyframes shake {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(-10deg); }
-            75% { transform: rotate(10deg); }
+        /* --- Scene 4: Kado & Animasi Buka Kado --- */
+        .gift-scene-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2f3542;
+            margin-bottom: 50px;
+        }
+        .gift-container {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            cursor: pointer;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        /* Tutup Kado */
+        .gift-lid {
+            position: absolute;
+            width: 150px;
+            height: 40px;
+            background-color: #ff4757;
+            top: 0;
+            left: -5px;
+            border-radius: 5px;
+            z-index: 3;
+            transition: all 1s ease;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+        }
+        .gift-lid::before {
+            content: '';
+            position: absolute;
+            left: 65px;
+            width: 20px;
+            height: 100%;
+            background-color: #f1c40f;
+        }
+        /* Badan Kado */
+        .gift-box-body {
+            position: absolute;
+            width: 140px;
+            height: 100px;
+            background-color: #ff6b6b;
+            bottom: 0;
+            border-radius: 0 0 5px 5px;
+            z-index: 2;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .gift-box-body::before {
+            content: '';
+            position: absolute;
+            left: 60px;
+            width: 20px;
+            height: 100%;
+            background-color: #f1c40f;
+        }
+        /* Isi Kado (Flashdisk) */
+        .hidden-flashdisk {
+            position: absolute;
+            font-size: 60px;
+            left: 40px;
+            bottom: 20px; /* Sembunyi di dalam box */
+            z-index: 1;
+            transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
         }
 
-        /* --- Scene 5: Laptop & Flashdisk --- */
-        .laptop-container { position: relative; width: 300px; height: 200px; }
+        /* Kelas saat kado diklik */
+        .gift-container.opened {
+            animation: none; /* hentikan bounce */
+            cursor: default;
+        }
+        .gift-container.opened .gift-lid {
+            transform: translateY(-100px) translateX(30px) rotate(25deg);
+            opacity: 0;
+        }
+        .gift-container.opened .hidden-flashdisk {
+            bottom: 140px; /* Muncul ke atas */
+            opacity: 1;
+            transform: scale(1.3);
+        }
+
+        /* --- Scene 5: Laptop Super Besar --- */
+        .laptop-container { 
+            position: relative; 
+            width: 700px; 
+            height: 450px; 
+        }
         .laptop-screen {
-            width: 100%; height: 180px;
+            width: 100%; 
+            height: 420px;
             background-color: #2f3542;
-            border: 10px solid #1e272e;
-            border-radius: 10px 10px 0 0;
+            border: 20px solid #1e272e;
+            border-bottom: 30px solid #1e272e;
+            border-radius: 15px 15px 0 0;
             box-sizing: border-box;
-            display: flex; align-items: center; justify-content: center;
-            transition: background-color 1s;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            transition: background-color 1s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Lampu indikator webcam */
+        .laptop-screen::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px; height: 8px;
+            background-color: #555;
+            border-radius: 50%;
         }
         .laptop-keyboard {
-            width: 340px; height: 20px;
-            background-color: #1e272e;
-            margin-left: -20px;
-            border-radius: 0 0 10px 10px;
+            width: 780px; 
+            height: 25px;
+            background-color: #b2bec3;
+            margin-left: -40px;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        /* Cekungan trackpad */
+        .laptop-keyboard::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px; height: 10px;
+            background-color: #95a5a6;
+            border-radius: 5px;
         }
         .flashdisk {
-            position: absolute; font-size: 30px;
-            right: -80px; bottom: 15px; opacity: 0;
+            position: absolute; 
+            font-size: 40px;
+            right: -100px; 
+            bottom: 10px; 
+            opacity: 0;
+            z-index: 5;
         }
-        .plug-in { animation: plugFlashdisk 2s forwards; }
+        .plug-in { 
+            animation: plugFlashdisk 1.5s forwards; 
+        }
         @keyframes plugFlashdisk {
-            0% { right: -80px; opacity: 1; }
-            100% { right: -15px; opacity: 1; }
+            0% { right: -100px; opacity: 1; transform: scale(1); }
+            100% { right: -30px; opacity: 1; transform: scale(1.1); }
         }
         
         .screen-content {
-            display: none; text-align: center; color: white; padding: 10px;
+            display: none; 
+            text-align: center; 
+            color: white; 
+            padding: 20px;
+            width: 90%;
+            height: 90%;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
         }
-        .screen-content h2 { margin: 0 0 10px 0; font-size: 20px; color: #ff6b6b; }
+        .screen-content h2 { 
+            margin: 20px 0; 
+            font-size: 32px; 
+            color: #ff6b6b; 
+        }
+        .screen-content p {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #2f3542;
+        }
+        /* Kotak placeholder foto */
+        .photo-placeholder {
+            width: 80%;
+            height: 200px;
+            background-color: #ffeaa7;
+            margin: 0 auto 20px auto;
+            border: 2px dashed #ffb8b8;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e17055;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
     <!-- Scene 1: Mulai -->
     <div id="scene1" class="scene active">
-        <button id="btn-mulai">Mulai Cerita Kita</button>
+        <button id="btn-mulai">Mulai</button>
     </div>
 
     <!-- Scene 2: Balon Terbang -->
     <div id="scene2" class="scene">
-        <!-- Balon akan di-generate via JavaScript -->
+        <!-- Balon JS -->
     </div>
 
     <!-- Scene 3: Kue Anniversary -->
     <div id="scene3" class="scene">
+        <h2 style="color: #2f3542; margin-bottom: 60px;">Klik kue untuk meniup lilin!</h2>
         <div class="cake-container" id="cake-click">
-            <p>Klik kue untuk meniup lilin!</p>
             <div class="wind" id="wind"></div>
-            <div class="candle">
+            <!-- Lilin bentuk 4th -->
+            <div class="candle-wrapper">
                 <div class="flame" id="flame"></div>
+                <div class="candle-text">4<span>th</span></div>
             </div>
-            <div class="cake">
-                <p class="cake-text">4</p>
-            </div>
+            <!-- Body Kue -->
+            <div class="cake"></div>
         </div>
     </div>
 
-    <!-- Scene 4: Kado -->
+    <!-- Scene 4: Kado Interaktif -->
     <div id="scene4" class="scene">
-        <p>Buka kadonya!</p>
-        <div class="gift" id="gift-box">🎁</div>
+        <p class="gift-scene-text">Buka kadonya!</p>
+        <div class="gift-container" id="gift-container">
+            <div class="hidden-flashdisk">💾</div>
+            <div class="gift-lid"></div>
+            <div class="gift-box-body"></div>
+        </div>
     </div>
 
     <!-- Scene 5: Laptop & Memori -->
@@ -187,8 +375,11 @@
         <div class="laptop-container">
             <div class="laptop-screen" id="screen">
                 <div class="screen-content" id="screen-content">
-                    <h2>Happy 4th Anniversary!</h2>
-                    <p>[ Nanti foto dan tulisan romantis kamu ditaruh di sini ]</p>
+                    <h2>Happy 4th Anniversary! ❤️</h2>
+                    <div class="photo-placeholder">
+                        [ Nanti Foto Kamu & Dia Ditaruh di Sini ]
+                    </div>
+                    <p>Terima kasih sudah menemani selama 4 tahun ini.<br>Semoga kita selalu bahagia bersama!</p>
                 </div>
             </div>
             <div class="laptop-keyboard"></div>
@@ -206,61 +397,78 @@
         document.getElementById('btn-mulai').addEventListener('click', () => {
             switchScene('scene1', 'scene2');
             
-            // Membuat balon secara dinamis
             const scene2 = document.getElementById('scene2');
             const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9f43', '#ff9ff3'];
             
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 25; i++) {
                 let balloon = document.createElement('div');
                 balloon.classList.add('balloon');
-                balloon.style.left = Math.random() * 90 + 'vw';
+                balloon.style.left = Math.random() * 95 + 'vw';
                 balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
                 balloon.style.animationDelay = Math.random() * 2 + 's';
                 scene2.appendChild(balloon);
             }
 
-            // Pindah ke kue setelah 4.5 detik
             setTimeout(() => {
                 switchScene('scene2', 'scene3');
             }, 4500);
         });
 
         // --- Logika Scene 3 (Tiup Lilin) ---
-        document.getElementById('cake-click').addEventListener('click', () => {
+        document.getElementById('cake-click').addEventListener('click', function() {
             const wind = document.getElementById('wind');
             const flame = document.getElementById('flame');
             
-            wind.classList.add('blow-anim'); // Animasi angin lewat
+            // Mencegah klik berkali-kali
+            if(wind.classList.contains('blow-anim')) return;
+
+            wind.classList.add('blow-anim'); 
             
-            // Matikan lilin saat angin menyentuh
             setTimeout(() => {
+                flame.style.animation = 'none'; // Hentikan flicker
                 flame.style.opacity = '0';
             }, 500);
 
-            // Pindah ke kado
             setTimeout(() => {
                 switchScene('scene3', 'scene4');
             }, 2500);
         });
 
-        // --- Logika Scene 4 (Kado -> Laptop) ---
-        document.getElementById('gift-box').addEventListener('click', () => {
-            switchScene('scene4', 'scene5');
+        // --- Logika Scene 4 (Animasi Buka Kado) ---
+        document.getElementById('gift-container').addEventListener('click', function() {
+            // Jika sudah diklik, jangan jalankan lagi
+            if(this.classList.contains('opened')) return; 
             
-            const flashdisk = document.getElementById('flashdisk');
-            const screen = document.getElementById('screen');
-            const content = document.getElementById('screen-content');
-
-            // Animasi flashdisk masuk
-            flashdisk.classList.add('plug-in');
-
-            // Layar menyala dan menampilkan konten setelah flashdisk tercolok
+            // Tambahkan class opened untuk memicu animasi CSS
+            this.classList.add('opened');
+            
+            // Tunggu 2.5 detik agar animasi kado terbuka & flashdisk keluar selesai, baru pindah scene
             setTimeout(() => {
-                screen.style.backgroundColor = '#fdf5e6';
-                content.style.display = 'block';
-                content.style.color = '#2f3542';
-            }, 2000);
+                switchScene('scene4', 'scene5');
+                
+                const flashdisk = document.getElementById('flashdisk');
+                const screen = document.getElementById('screen');
+                const content = document.getElementById('screen-content');
+
+                // Beri sedikit delay agar scene 5 muncul dulu, baru flashdisk dicolok
+                setTimeout(() => {
+                    flashdisk.classList.add('plug-in');
+                    
+                    // Setelah flashdisk nancap (1.5s), nyalakan layar
+                    setTimeout(() => {
+                        screen.style.backgroundColor = '#fdf5e6';
+                        content.style.display = 'block';
+                    }, 1500);
+
+                }, 800);
+
+            }, 2500); 
         });
     </script>
 </body>
 </html>
+```eof
+
+Sekarang kamu bisa **mengulang langkah edit file** seperti yang tadi kita bahas (mengubah nama file yang ada di GitHub menjadi `index.html`, lalu mengganti seluruh isinya dengan kode baru di atas, dan klik *Commit changes*). 
+
+Semua *request* kamu (tombol Mulai, lilin 4th, animasi kado terbang, dan laptop besar) sudah siap berjalan dengan mulus!
