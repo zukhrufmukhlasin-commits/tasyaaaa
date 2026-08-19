@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy 4th Anniversary</title>
     <style>
         body {
@@ -10,11 +10,12 @@
             padding: 0;
             background-color: #fdf5e6;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden; 
+            overflow: hidden; /* Mencegah layar geser-geser */
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            width: 100vw;
         }
 
         .scene {
@@ -31,10 +32,29 @@
             display: flex;
         }
 
+        /* --- Tombol Musik (Akan muncul di Scene 5) --- */
+        #music-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            padding: 10px 15px;
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: clamp(12px, 3vw, 16px);
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: background-color 0.3s;
+            display: none; /* Disembunyikan dulu */
+        }
+
         /* --- Scene 1: Tombol Mulai --- */
         #btn-mulai {
             padding: 15px 50px;
-            font-size: 28px;
+            font-size: clamp(20px, 6vw, 28px);
             font-weight: bold;
             background-color: #ff6b6b;
             color: white;
@@ -42,12 +62,9 @@
             border-radius: 50px;
             cursor: pointer;
             box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
-            transition: transform 0.2s, background-color 0.2s;
+            transition: transform 0.2s;
         }
-        #btn-mulai:hover { 
-            transform: scale(1.1); 
-            background-color: #ff4757;
-        }
+        #btn-mulai:hover { transform: scale(1.1); background-color: #ff4757; }
 
         /* --- Scene 2: Balon --- */
         .balloon {
@@ -64,7 +81,6 @@
             position: absolute;
             bottom: -10px;
             left: 20px;
-            width: 0; height: 0;
             border-left: 5px solid transparent;
             border-right: 5px solid transparent;
             border-bottom: 10px solid inherit;
@@ -74,7 +90,7 @@
             100% { transform: translateY(-120vh) rotate(15deg); opacity: 0; }
         }
 
-        /* --- Scene 3: Kue Tart Bertingkat & Lilin 4th --- */
+        /* --- Scene 3: Kue Tart --- */
         .cake-container { 
             position: relative; 
             cursor: pointer; 
@@ -83,8 +99,14 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            transform: scale(0.9); /* Sedikit dikecilkan agar pas di HP */
         }
-        
+        .scene h2 {
+            font-size: clamp(20px, 5vw, 30px);
+            color: #2f3542;
+            text-align: center;
+            padding: 0 20px;
+        }
         .candle-wrapper {
             position: relative;
             display: flex;
@@ -101,9 +123,7 @@
             line-height: 0.8;
             margin-top: 10px;
         }
-        .candle-text span {
-            font-size: 35px;
-        }
+        .candle-text span { font-size: 35px; }
         .flame {
             width: 20px; height: 35px;
             background-color: #f1c40f;
@@ -119,10 +139,8 @@
         .wind {
             position: absolute; width: 80px; height: 3px;
             background: rgba(150, 200, 255, 0.8);
-            top: 15px; 
-            right: -150px; opacity: 0;
-            border-radius: 5px;
-            z-index: 20;
+            top: 15px; right: -150px; opacity: 0;
+            border-radius: 5px; z-index: 20;
         }
         .blow-anim { animation: blowWind 1s forwards; }
         @keyframes blowWind {
@@ -130,12 +148,7 @@
             50% { opacity: 1; right: -10px;}
             100% { right: 100px; opacity: 0; }
         }
-
-        .cake-pyramid {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        .cake-pyramid { display: flex; flex-direction: column; align-items: center; }
         .cake-tier {
             background-color: #f3a683; 
             border-radius: 20px; 
@@ -143,136 +156,68 @@
             box-shadow: inset 0 -12px rgba(0,0,0,0.1), 0 5px 10px rgba(0,0,0,0.15);
         }
         .cake-tier::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 25px;
+            content: ''; position: absolute;
+            top: 0; left: 0; right: 0; height: 25px;
             background-color: #fff;
             border-radius: 20px 20px 25px 25px;
-            box-shadow: 0 4px 5px rgba(0,0,0,0.05);
         }
         .cake-tier::before {
-            content: '';
-            position: absolute;
-            top: 55%; left: 0; right: 0;
-            height: 6px;
-            background-color: #e77f67; 
-            z-index: 1;
+            content: ''; position: absolute;
+            top: 55%; left: 0; right: 0; height: 6px;
+            background-color: #e77f67; z-index: 1;
         }
-        
         .tier-4 { width: 110px; height: 50px; z-index: 4; }
         .tier-3 { width: 170px; height: 55px; z-index: 3; margin-top: -10px; }
         .tier-2 { width: 230px; height: 60px; z-index: 2; margin-top: -10px; }
         .tier-1 { width: 290px; height: 65px; z-index: 1; margin-top: -10px; }
-
-        /* Tulisan di kue */
         .icing-text {
-            position: absolute;
-            bottom: 8px;
-            width: 100%;
-            text-align: center;
-            font-size: 22px;
-            font-weight: bold;
-            color: #fff;
-            font-family: 'Comic Sans MS', 'Segoe UI', cursive, sans-serif;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-            z-index: 5;
-            letter-spacing: 1px;
+            position: absolute; bottom: 8px; width: 100%;
+            text-align: center; font-size: 20px; font-weight: bold;
+            color: #fff; font-family: 'Comic Sans MS', cursive, sans-serif;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2); z-index: 5;
         }
 
-        /* --- Scene 4: Kado & Animasi Buka Kado --- */
-        .gift-scene-text {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2f3542;
-            margin-bottom: 50px;
-        }
+        /* --- Scene 4: Kado --- */
+        .gift-scene-text { font-size: clamp(20px, 5vw, 26px); font-weight: bold; color: #2f3542; margin-bottom: 50px; }
         .gift-container {
-            position: relative;
-            width: 140px;
-            height: 140px;
-            cursor: pointer;
+            position: relative; width: 140px; height: 140px; cursor: pointer;
             animation: bounce 2s infinite;
         }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
         .gift-lid {
-            position: absolute;
-            width: 150px;
-            height: 40px;
-            background-color: #ff4757;
-            top: 0;
-            left: -5px;
-            border-radius: 5px;
-            z-index: 3;
-            transition: all 1s ease;
-            box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+            position: absolute; width: 150px; height: 40px; background-color: #ff4757;
+            top: 0; left: -5px; border-radius: 5px; z-index: 3; transition: all 1s ease;
         }
-        .gift-lid::before {
-            content: '';
-            position: absolute;
-            left: 65px;
-            width: 20px;
-            height: 100%;
-            background-color: #f1c40f;
-        }
+        .gift-lid::before { content: ''; position: absolute; left: 65px; width: 20px; height: 100%; background-color: #f1c40f; }
         .gift-box-body {
-            position: absolute;
-            width: 140px;
-            height: 100px;
-            background-color: #ff6b6b;
-            bottom: 0;
-            border-radius: 0 0 5px 5px;
-            z-index: 2;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            position: absolute; width: 140px; height: 100px; background-color: #ff6b6b;
+            bottom: 0; border-radius: 0 0 5px 5px; z-index: 2;
         }
-        .gift-box-body::before {
-            content: '';
-            position: absolute;
-            left: 60px;
-            width: 20px;
-            height: 100%;
-            background-color: #f1c40f;
-        }
+        .gift-box-body::before { content: ''; position: absolute; left: 60px; width: 20px; height: 100%; background-color: #f1c40f; }
         .hidden-flashdisk {
-            position: absolute;
-            font-size: 60px;
-            left: 40px;
-            bottom: 20px; 
-            z-index: 1;
-            transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            opacity: 0;
+            position: absolute; font-size: 60px; left: 40px; bottom: 20px; 
+            z-index: 1; transition: all 1.5s ease; opacity: 0;
         }
+        .gift-container.opened { animation: none; cursor: default; }
+        .gift-container.opened .gift-lid { transform: translateY(-100px) translateX(30px) rotate(25deg); opacity: 0; }
+        .gift-container.opened .hidden-flashdisk { bottom: 140px; opacity: 1; transform: scale(1.3); }
 
-        .gift-container.opened {
-            animation: none; 
-            cursor: default;
-        }
-        .gift-container.opened .gift-lid {
-            transform: translateY(-100px) translateX(30px) rotate(25deg);
-            opacity: 0;
-        }
-        .gift-container.opened .hidden-flashdisk {
-            bottom: 140px; 
-            opacity: 1;
-            transform: scale(1.3);
-        }
-
-        /* --- Scene 5: Laptop Super Besar --- */
+        /* --- Scene 5: Laptop Responsive --- */
         .laptop-container { 
             position: relative; 
-            width: 700px; 
-            height: 450px; 
+            width: 90vw; /* Responsif ke lebar HP */
+            max-width: 700px; 
+            height: 60vh; /* Responsif ke tinggi HP */
+            max-height: 450px; 
+            margin-top: 20px;
         }
         .laptop-screen {
             width: 100%; 
-            height: 420px;
+            height: 100%;
             background-color: #2f3542;
-            border: 20px solid #1e272e;
-            border-bottom: 30px solid #1e272e;
-            border-radius: 15px 15px 0 0;
+            border: clamp(10px, 3vw, 20px) solid #1e272e;
+            border-bottom: clamp(15px, 4vw, 30px) solid #1e272e;
+            border-radius: 10px 10px 0 0;
             box-sizing: border-box;
             display: flex; 
             align-items: center; 
@@ -282,112 +227,75 @@
             overflow: hidden;
         }
         .laptop-screen::before {
-            content: '';
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 8px; height: 8px;
-            background-color: #555;
-            border-radius: 50%;
+            content: ''; position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+            width: 6px; height: 6px; background-color: #555; border-radius: 50%;
         }
         .laptop-keyboard {
-            width: 780px; 
-            height: 25px;
+            width: 110%; /* Lebih lebar dari layar */
+            height: clamp(15px, 4vw, 25px);
             background-color: #b2bec3;
-            margin-left: -40px;
-            border-radius: 0 0 20px 20px;
+            margin-left: -5%; /* Mengimbangi width 110% */
+            border-radius: 0 0 10px 10px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.3);
             position: relative;
         }
         .laptop-keyboard::after {
-            content: '';
-            position: absolute;
-            top: 5px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px; height: 10px;
-            background-color: #95a5a6;
-            border-radius: 5px;
+            content: ''; position: absolute; top: 20%; left: 50%; transform: translateX(-50%);
+            width: 20%; height: 40%; background-color: #95a5a6; border-radius: 5px;
         }
         .flashdisk {
             position: absolute; 
-            font-size: 40px;
-            right: -100px; 
-            bottom: 10px; 
-            opacity: 0;
-            z-index: 5;
+            font-size: clamp(24px, 6vw, 40px);
+            right: -20%; 
+            bottom: 5px; 
+            opacity: 0; z-index: 5;
         }
-        .plug-in { 
-            animation: plugFlashdisk 1.5s forwards; 
-        }
+        .plug-in { animation: plugFlashdisk 1.5s forwards; }
         @keyframes plugFlashdisk {
-            0% { right: -100px; opacity: 1; transform: scale(1); }
-            100% { right: -30px; opacity: 1; transform: scale(1.1); }
+            0% { right: -20%; opacity: 1; transform: scale(1); }
+            100% { right: -2%; opacity: 1; transform: scale(1.1); } /* Nancap di ujung keyboard */
         }
         
-        /* Konten Layar (Scrollable) */
+        /* Konten Layar (Scrollable & Responsive) */
         .screen-content {
             display: none; 
             text-align: center; 
             color: #2f3542; 
-            padding: 20px 40px;
-            width: 95%;
-            height: 95%;
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
-            box-sizing: border-box;
-            overflow-y: auto; 
+            padding: 15px clamp(15px, 4vw, 40px); /* Padding menyesuaikan HP */
+            width: 95%; height: 95%;
+            background-color: white; border-radius: 5px;
+            box-sizing: border-box; overflow-y: auto; 
         }
-        
-        .screen-content::-webkit-scrollbar {
-            width: 8px;
-        }
-        .screen-content::-webkit-scrollbar-track {
-            background: #f1f2f6; 
-            border-radius: 5px;
-        }
-        .screen-content::-webkit-scrollbar-thumb {
-            background: #ff6b6b; 
-            border-radius: 5px;
-        }
+        .screen-content::-webkit-scrollbar { width: 5px; }
+        .screen-content::-webkit-scrollbar-track { background: #f1f2f6; border-radius: 5px; }
+        .screen-content::-webkit-scrollbar-thumb { background: #ff6b6b; border-radius: 5px; }
 
-        .screen-content h2 { 
-            margin: 20px 0 10px 0; 
-            font-size: 32px; 
-            color: #ff6b6b; 
-        }
+        .screen-content h2 { margin: 15px 0 10px 0; font-size: clamp(20px, 5vw, 32px); color: #ff6b6b; }
         
         .year-title {
-            font-size: 28px;
-            color: #eccc68;
-            margin: 30px 0 10px 0;
-            font-weight: bold;
-            border-bottom: 2px dashed #eccc68;
-            display: inline-block;
-            padding-bottom: 5px;
+            font-size: clamp(22px, 4vw, 28px); color: #eccc68;
+            margin: 20px 0 10px 0; font-weight: bold;
+            border-bottom: 2px dashed #eccc68; display: inline-block; padding-bottom: 5px;
         }
 
         .memory-photo {
-            max-width: 80%;
-            height: auto;
-            border-radius: 10px;
-            margin: 20px auto;
-            display: block;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-width: 90%; height: auto; border-radius: 10px;
+            margin: 15px auto; display: block; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
         .memory-text {
-            font-size: 18px;
-            line-height: 1.6;
-            color: #2f3542;
-            text-align: justify;
-            margin-bottom: 30px;
+            font-size: clamp(14px, 3.5vw, 18px); /* Ukuran teks pas untuk baca di HP */
+            line-height: 1.6; text-align: justify; margin-bottom: 25px;
         }
     </style>
 </head>
 <body>
+
+    <!-- Tombol On/Off Musik -->
+    <button id="music-toggle">🔊 Music On</button>
+
+    <!-- Tempat Youtube Player Disembunyikan -->
+    <div id="yt-player-container" style="display:none;"></div>
 
     <div id="scene1" class="scene active">
         <button id="btn-mulai">Mulai</button>
@@ -396,7 +304,7 @@
     <div id="scene2" class="scene"></div>
 
     <div id="scene3" class="scene">
-        <h2 style="color: #2f3542; margin-bottom: 40px;">Klik kue untuk meniup lilin!</h2>
+        <h2>Klik kue untuk meniup lilin!</h2>
         
         <div class="cake-container" id="cake-click">
             <div class="candle-wrapper">
@@ -409,7 +317,6 @@
                 <div class="cake-tier tier-4"></div>
                 <div class="cake-tier tier-3"></div>
                 <div class="cake-tier tier-2"></div>
-                <!-- Tulisan ditaruh di tingkat paling bawah -->
                 <div class="cake-tier tier-1">
                     <div class="icing-text">Happy Anniversary</div>
                 </div>
@@ -473,12 +380,34 @@
         </div>
     </div>
 
+    <!-- SCRIPT YOUTUBE API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
+        // Inisialisasi Player Youtube
+        let player;
+        let isPlaying = false;
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('yt-player-container', {
+                height: '0',
+                width: '0',
+                videoId: 'fDvAG1KgDOY', // <-- Ini adalah ID Lagumu
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0,
+                    'modestbranding': 1,
+                    'loop': 1,
+                    'playlist': 'fDvAG1KgDOY'
+                }
+            });
+        }
+
         const switchScene = (hideId, showId) => {
             document.getElementById(hideId).classList.remove('active');
             document.getElementById(showId).classList.add('active');
         };
 
+        // --- Logika Scene 1 -> 2 (Balon) ---
         document.getElementById('btn-mulai').addEventListener('click', () => {
             switchScene('scene1', 'scene2');
             
@@ -494,40 +423,32 @@
                 scene2.appendChild(balloon);
             }
 
-            setTimeout(() => {
-                switchScene('scene2', 'scene3');
-            }, 4500);
+            setTimeout(() => { switchScene('scene2', 'scene3'); }, 4500);
         });
 
+        // --- Logika Scene 3 (Tiup Lilin) ---
         document.getElementById('cake-click').addEventListener('click', function() {
             const wind = document.getElementById('wind');
             const flame = document.getElementById('flame');
             
             if(wind.classList.contains('blow-anim')) return;
-
             wind.classList.add('blow-anim'); 
             
-            setTimeout(() => {
-                flame.style.animation = 'none'; 
-                flame.style.opacity = '0';
-            }, 500);
-
-            setTimeout(() => {
-                switchScene('scene3', 'scene4');
-            }, 2500);
+            setTimeout(() => { flame.style.animation = 'none'; flame.style.opacity = '0'; }, 500);
+            setTimeout(() => { switchScene('scene3', 'scene4'); }, 2500);
         });
 
+        // --- Logika Kado & Musik Play ---
         document.getElementById('gift-container').addEventListener('click', function() {
             if(this.classList.contains('opened')) return; 
-            
             this.classList.add('opened');
             
             setTimeout(() => {
                 switchScene('scene4', 'scene5');
-                
                 const flashdisk = document.getElementById('flashdisk');
                 const screen = document.getElementById('screen');
                 const content = document.getElementById('screen-content');
+                const musicBtn = document.getElementById('music-toggle');
 
                 setTimeout(() => {
                     flashdisk.classList.add('plug-in');
@@ -535,11 +456,32 @@
                     setTimeout(() => {
                         screen.style.backgroundColor = '#fdf5e6';
                         content.style.display = 'block';
+                        
+                        // PLAY MUSIK YOUTUBE SAAT LAPTOP NYALA
+                        if(player && player.playVideo) {
+                            player.playVideo();
+                            isPlaying = true;
+                            musicBtn.style.display = 'block'; // Munculkan tombol on/off
+                        }
                     }, 1500);
 
                 }, 800);
 
             }, 2500); 
+        });
+
+        // --- Tombol On/Off Musik ---
+        document.getElementById('music-toggle').addEventListener('click', function() {
+            if(isPlaying) {
+                player.pauseVideo();
+                this.innerHTML = '🔇 Music Off';
+                this.style.backgroundColor = '#a4b0be';
+            } else {
+                player.playVideo();
+                this.innerHTML = '🔊 Music On';
+                this.style.backgroundColor = '#ff6b6b';
+            }
+            isPlaying = !isPlaying;
         });
     </script>
 </body>
