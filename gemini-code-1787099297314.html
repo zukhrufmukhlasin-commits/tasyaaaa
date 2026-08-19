@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy 4th Anniversary</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #fdf5e6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden; /* Mencegah scroll saat balon terbang */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .scene {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+
+        .scene.active {
+            display: flex;
+        }
+
+        /* --- Scene 1: Tombol Mulai --- */
+        #btn-mulai {
+            padding: 15px 40px;
+            font-size: 24px;
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+            transition: transform 0.2s;
+        }
+        #btn-mulai:hover { transform: scale(1.1); }
+
+        /* --- Scene 2: Balon --- */
+        .balloon {
+            position: absolute;
+            bottom: -100px;
+            width: 50px;
+            height: 60px;
+            background-color: #ff6b6b;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            animation: flyUp 4s ease-in forwards;
+        }
+        .balloon::before {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 20px;
+            width: 0; height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 10px solid #ff6b6b;
+        }
+        @keyframes flyUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-120vh) rotate(15deg); opacity: 0; }
+        }
+
+        /* --- Scene 3: Kue --- */
+        .cake-container { position: relative; cursor: pointer; text-align: center; }
+        .cake {
+            width: 150px; height: 80px;
+            background-color: #f3a683;
+            border-radius: 10px;
+            position: relative;
+            margin-top: 50px;
+            box-shadow: inset 0 -10px rgba(0,0,0,0.1);
+        }
+        .cake-text {
+            font-size: 40px; font-weight: bold; color: white;
+            line-height: 80px; margin: 0;
+        }
+        .candle {
+            width: 15px; height: 50px;
+            background: repeating-linear-gradient(45deg, #fff, #fff 5px, #ff4757 5px, #ff4757 10px);
+            position: absolute; top: -50px; left: 67px;
+        }
+        .flame {
+            width: 15px; height: 25px;
+            background-color: #f1c40f;
+            border-radius: 50% 50% 20% 20%;
+            position: absolute; top: -30px; left: 0;
+            box-shadow: 0 0 15px #f1c40f;
+            transition: opacity 0.3s;
+        }
+        .wind {
+            position: absolute; width: 50px; height: 2px;
+            background: rgba(200, 200, 255, 0.8);
+            top: 20px; right: -100px; opacity: 0;
+        }
+        .blow-anim { animation: blowWind 1s forwards; }
+        @keyframes blowWind {
+            0% { right: -100px; opacity: 0; }
+            50% { opacity: 1; }
+            100% { right: 100px; opacity: 0; }
+        }
+
+        /* --- Scene 4: Kado --- */
+        .gift { font-size: 100px; cursor: pointer; animation: shake 2s infinite; }
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+
+        /* --- Scene 5: Laptop & Flashdisk --- */
+        .laptop-container { position: relative; width: 300px; height: 200px; }
+        .laptop-screen {
+            width: 100%; height: 180px;
+            background-color: #2f3542;
+            border: 10px solid #1e272e;
+            border-radius: 10px 10px 0 0;
+            box-sizing: border-box;
+            display: flex; align-items: center; justify-content: center;
+            transition: background-color 1s;
+        }
+        .laptop-keyboard {
+            width: 340px; height: 20px;
+            background-color: #1e272e;
+            margin-left: -20px;
+            border-radius: 0 0 10px 10px;
+        }
+        .flashdisk {
+            position: absolute; font-size: 30px;
+            right: -80px; bottom: 15px; opacity: 0;
+        }
+        .plug-in { animation: plugFlashdisk 2s forwards; }
+        @keyframes plugFlashdisk {
+            0% { right: -80px; opacity: 1; }
+            100% { right: -15px; opacity: 1; }
+        }
+        
+        .screen-content {
+            display: none; text-align: center; color: white; padding: 10px;
+        }
+        .screen-content h2 { margin: 0 0 10px 0; font-size: 20px; color: #ff6b6b; }
+    </style>
+</head>
+<body>
+
+    <!-- Scene 1: Mulai -->
+    <div id="scene1" class="scene active">
+        <button id="btn-mulai">Mulai Cerita Kita</button>
+    </div>
+
+    <!-- Scene 2: Balon Terbang -->
+    <div id="scene2" class="scene">
+        <!-- Balon akan di-generate via JavaScript -->
+    </div>
+
+    <!-- Scene 3: Kue Anniversary -->
+    <div id="scene3" class="scene">
+        <div class="cake-container" id="cake-click">
+            <p>Klik kue untuk meniup lilin!</p>
+            <div class="wind" id="wind"></div>
+            <div class="candle">
+                <div class="flame" id="flame"></div>
+            </div>
+            <div class="cake">
+                <p class="cake-text">4</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scene 4: Kado -->
+    <div id="scene4" class="scene">
+        <p>Buka kadonya!</p>
+        <div class="gift" id="gift-box">🎁</div>
+    </div>
+
+    <!-- Scene 5: Laptop & Memori -->
+    <div id="scene5" class="scene">
+        <div class="laptop-container">
+            <div class="laptop-screen" id="screen">
+                <div class="screen-content" id="screen-content">
+                    <h2>Happy 4th Anniversary!</h2>
+                    <p>[ Nanti foto dan tulisan romantis kamu ditaruh di sini ]</p>
+                </div>
+            </div>
+            <div class="laptop-keyboard"></div>
+            <div class="flashdisk" id="flashdisk">💾</div>
+        </div>
+    </div>
+
+    <script>
+        const switchScene = (hideId, showId) => {
+            document.getElementById(hideId).classList.remove('active');
+            document.getElementById(showId).classList.add('active');
+        };
+
+        // --- Logika Scene 1 -> 2 (Balon) ---
+        document.getElementById('btn-mulai').addEventListener('click', () => {
+            switchScene('scene1', 'scene2');
+            
+            // Membuat balon secara dinamis
+            const scene2 = document.getElementById('scene2');
+            const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9f43', '#ff9ff3'];
+            
+            for (let i = 0; i < 20; i++) {
+                let balloon = document.createElement('div');
+                balloon.classList.add('balloon');
+                balloon.style.left = Math.random() * 90 + 'vw';
+                balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                balloon.style.animationDelay = Math.random() * 2 + 's';
+                scene2.appendChild(balloon);
+            }
+
+            // Pindah ke kue setelah 4.5 detik
+            setTimeout(() => {
+                switchScene('scene2', 'scene3');
+            }, 4500);
+        });
+
+        // --- Logika Scene 3 (Tiup Lilin) ---
+        document.getElementById('cake-click').addEventListener('click', () => {
+            const wind = document.getElementById('wind');
+            const flame = document.getElementById('flame');
+            
+            wind.classList.add('blow-anim'); // Animasi angin lewat
+            
+            // Matikan lilin saat angin menyentuh
+            setTimeout(() => {
+                flame.style.opacity = '0';
+            }, 500);
+
+            // Pindah ke kado
+            setTimeout(() => {
+                switchScene('scene3', 'scene4');
+            }, 2500);
+        });
+
+        // --- Logika Scene 4 (Kado -> Laptop) ---
+        document.getElementById('gift-box').addEventListener('click', () => {
+            switchScene('scene4', 'scene5');
+            
+            const flashdisk = document.getElementById('flashdisk');
+            const screen = document.getElementById('screen');
+            const content = document.getElementById('screen-content');
+
+            // Animasi flashdisk masuk
+            flashdisk.classList.add('plug-in');
+
+            // Layar menyala dan menampilkan konten setelah flashdisk tercolok
+            setTimeout(() => {
+                screen.style.backgroundColor = '#fdf5e6';
+                content.style.display = 'block';
+                content.style.color = '#2f3542';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
